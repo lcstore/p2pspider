@@ -1,3 +1,3 @@
 #!/bin/bash
-. ~/.profile
+# . ~/.profile
 nohup node ./index.js >nohup.out 2>&1 &
