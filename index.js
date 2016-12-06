@@ -23,7 +23,7 @@ function buffer2String(src){
 	   return src;
 	}
 }
-
+var count =0;
 var p2p = P2PSpider({
     nodesMaxSize: 200,   // be careful
     maxConnections: 400, // be careful
@@ -36,22 +36,24 @@ p2p.ignore(function (infohash, rinfo, callback) {
 });
 
 p2p.on('metadata', function (metadata) {
+	count++;
 	buffer2String(metadata);
 	var isPass = false;
 	var oInfo = metadata.info;
 	var oFileArr = oInfo.files;
-	if(!oFileArr){
-		oFileArr = [];
+	if(oInfo.length &&  oInfo.name){
+		oFileArr = oFileArr || [];
 		var oFile = {};
 		oFile.length = oInfo.length;
 		oFile.path = [oInfo.name];
 		oFileArr.push(oFile);
 		// console.log('no file:'+JSON.stringify(oFileArr));
 	}
-	var oReg = /\.(avi|mpg|divx|div|xvid|mpeg|wmv|asf|asx|mpe|m1v|m2v|dat|mp4|m4v|dv|dif|mjpg|mjpeg|mov|qt|rm|rmvb|3gp|3g2|h261|h264|yuv|raw|flv|swf|vob|mkv|ogm)$/ig;
+	var oVideoReg = /\.(avi|mpg|divx|div|xvid|mpeg|wmv|asf|asx|mpe|m1v|m2v|dat|mp4|m4v|dv|dif|mjpg|mjpeg|mov|qt|rm|rmvb|3gp|3g2|h261|h264|yuv|raw|flv|swf|vob|mkv|ogm)$/ig;
+	var oZipReg = /\.(rar|cab|arj|lzh|ace|7-zip|tar|gzip|uue|bz2|jar|iso|z)$/ig;
     for (var i = 0; i < oFileArr.length; i++) {
     	var oFile = oFileArr[i];
-    	if(oFile.length > MIN_LEN && oReg.test(oFile.path[0])){
+    	if(oFile.length > MIN_LEN && (oVideoReg.test(oFile.path[0]) || oZipReg.test(oFile.path[0]))){
 			isPass = true;
 			break;
     	}
@@ -61,6 +63,7 @@ p2p.on('metadata', function (metadata) {
     }
 	var oLog = {}
 	oLog.time = new Date().getTime();
+	oLog.index = count;
 	oLog.data = JSON.stringify(metadata);
     console.log(JSON.stringify(oLog));
 });
