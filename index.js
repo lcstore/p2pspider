@@ -46,7 +46,7 @@ p2p.on('metadata', function (metadata) {
 		oFile.length = oInfo.length;
 		oFile.path = [oInfo.name];
 		oFileArr.push(oFile);
-		console.log('no file:'+JSON.stringify(oFileArr));
+		// console.log('no file:'+JSON.stringify(oFileArr));
 	}
 	var oReg = /\.(avi|mpg|divx|div|xvid|mpeg|wmv|asf|asx|mpe|m1v|m2v|dat|mp4|m4v|dv|dif|mjpg|mjpeg|mov|qt|rm|rmvb|3gp|3g2|h261|h264|yuv|raw|flv|swf|vob|mkv|ogm)$/ig;
     for (var i = 0; i < oFileArr.length; i++) {
